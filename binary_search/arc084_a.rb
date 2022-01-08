@@ -1,25 +1,23 @@
 # frozen_string_literal: true
 
 _ = gets.chomp.to_i
-a_parts = gets.split.map(&:to_i).sort
-b_parts = gets.split.map(&:to_i).sort
+a_parts = gets.split.map(&:to_i).sort.reverse
+b_parts = gets.split.map(&:to_i)
 c_parts = gets.split.map(&:to_i).sort
 
-combi = []
-a_parts.each do |ap|
-  boundary = b_parts.bsearch { |bp| ap < bp }
-  next if boundary.nil?
-
-  b_parts.find_index(boundary).upto(b_parts.size - 1) { |i| combi << b_parts[i] }
-end
-
 cnt = 0
-
-combi.sort.each do |bp|
-  boundary = c_parts.bsearch { |cp| bp < cp }
+b_parts.each do |bp|
+  boundary = a_parts.bsearch_index { |ap| ap < bp }
   next if boundary.nil?
 
-  cnt += (c_parts.size - c_parts.find_index(boundary))
+  a_cnt = a_parts.size - boundary
+
+  boundary = c_parts.bsearch_index { |cp| bp < cp }
+  next if boundary.nil?
+
+  c_cnt = c_parts.size - boundary
+
+  cnt += a_cnt * c_cnt
 end
 
 p cnt
