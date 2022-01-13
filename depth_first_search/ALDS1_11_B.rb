@@ -1,61 +1,36 @@
 # frozen_string_literal: true
 
-class Node
-  attr_accessor :seen_at, :visited_at
-  attr_reader :val, :adjacent_ids
+$count = 0
 
-  @@time = 0
-  @@nodes = []
+first_orders = []
+last_orders = []
 
-  def initialize(val, *adjacent_ids)
-    @val = val
-    @adjacent_ids = adjacent_ids
-    @seen_at = 0
-    @visited_at = 0
+def dfs(graph, id, visited, first_orders, last_orders)
+  first_orders[id] = $count = $count += 1
+  visited[id] = true
+  graph[id].each do |next_id|
+    next if visited[next_id]
+
+    dfs(graph, next_id, visited, first_orders, last_orders)
   end
-
-  def visited?
-    !visited_at.zero?
-  end
-
-  def seen?
-    !seen_at.zero?
-  end
-
-  def self.dfs(node)
-    @@time += 1
-    node.visited_at = @@time
-
-    node.adjacent_ids.each do |id|
-      child = @@nodes.select { |adj| adj.val == id }.first
-      child.seen_at = @@time unless child.seen?
-      dfs(child) unless child.visited?
-    end
-  end
-
-  def self.nodes
-    @@nodes
-  end
-
-  def self.add_nodes(node)
-    @@nodes << node
-  end
+  last_orders[id] = $count = $count += 1
 end
 
 n = gets.chomp.to_i
+
+graph = Array.new(n) { [] }
+
 n.times do
-  tmp = gets.chomp.split.map(&:to_i)
-  val = tmp.shift
-  _ = tmp.shift
-  adjacent_ids = tmp
-
-  Node.add_nodes Node.new(val, *adjacent_ids)
+  val, _, *adj = gets.chomp.split.map(&:to_i)
+  adj.each do |a|
+    graph[val - 1] << a - 1
+  end
 end
 
-Node.nodes.each do |node|
-  Node.dfs(node)
-end
+visited = Array.new(n, false)
 
-Node.nodes.each do |node|
-  puts "#{node.val} #{node.seen_at} #{node.visited_at}"
+dfs(graph, 0, visited, first_orders, last_orders)
+
+n.times do |i|
+  puts "#{i + 1} #{first_orders[i]} #{last_orders[i]}"
 end
