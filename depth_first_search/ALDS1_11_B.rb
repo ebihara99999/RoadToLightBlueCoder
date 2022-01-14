@@ -8,6 +8,7 @@ last_orders = []
 def dfs(graph, id, visited, first_orders, last_orders)
   first_orders[id] = $count = $count += 1
   visited[id] = true
+
   graph[id].each do |next_id|
     next if visited[next_id]
 
@@ -28,8 +29,10 @@ n.times do
 end
 
 visited = Array.new(n, false)
-
-dfs(graph, 0, visited, first_orders, last_orders)
+while visited.any?(&:!)
+  id = visited.find_index(false)
+  dfs(graph, id, visited, first_orders, last_orders)
+end
 
 n.times do |i|
   puts "#{i + 1} #{first_orders[i]} #{last_orders[i]}"
