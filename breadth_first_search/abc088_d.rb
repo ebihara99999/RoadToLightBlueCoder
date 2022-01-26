@@ -46,6 +46,11 @@ until queue.empty?
   break if is_goal
 end
 
+if dist[gy - 1][gx - 1] == -1
+  puts(-1)
+  return
+end
+
 routes = [[gx - 1, gy - 1]]
 dist[gy - 1][gx - 1].times do |i|
   routes << [prev_x[routes[i][1]][routes[i][0]], prev_y[routes[i][1]][routes[i][0]]]
