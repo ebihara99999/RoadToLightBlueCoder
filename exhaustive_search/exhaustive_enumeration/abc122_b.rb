@@ -1,18 +1,17 @@
 # ref: https://atcoder.jp/contests/abc122/tasks/abc122_b
 
 s = gets.chomp
-result = ''
-acgt_str = %w[A C G T]
-length = 0
 
-s.each_char do |char|
-  if acgt_str.include? char
-    result << char
+acgt = %w[A C G T]
+ans = 0
+tmp = ''
+s.each_char.with_index do |char, i|
+  if acgt.include?(char)
+    tmp << char
+    ans = tmp.size if tmp.size > ans
   else
-    length = result.length if length < result.length
-    result = ''
+    tmp = ''
   end
 end
 
-length = result.length if length < result.length
-puts length
+p ans
