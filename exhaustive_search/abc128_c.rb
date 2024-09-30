@@ -1,26 +1,36 @@
-# frozen_string_literal: true
 # ref: https://atcoder.jp/contests/abc128/tasks/abc128_c
 
-n, m = gets.chomp.split(' ').map(&:to_i)
+n, m = gets.chomp.split.map(&:to_i)
 
-bulbs = []
-m.times do
-  bulbs << gets.chomp.split(' ').map(&:to_i)
+switches = []
+patterns = []
+max_digits = n
+
+# 電球とスイッチの接続情報を読み込む
+m.times do |mi|
+  switches << gets.chomp.split.map(&:to_i)[1..-1]
 end
 
-plist = gets.chomp.split(' ').map(&:to_i)
+# 電球の点灯条件を読み込む
+p_arr = gets.chomp.split.map(&:to_i)
 
-combi_cnt = 0
-[1, 0].repeated_permutation(n) do |bits|
-  lit_cnt = 0
-  bulbs.each_with_index do |bulb, i|
-    on_cnt = 0
-    bulb[0].times do |b|
-      on_cnt += bits[bulb[b + 1] - 1]
+# 全てのスイッチの状態の組み合わせを生成
+count = 0
+(1 << n).times do |bit|
+  all_on = true
+
+  m.times do |i|
+    binding.irb
+    # スイッチ si がすべて on かつ p の偶奇で点灯確認をする
+    on_count = switches[i].count { |s| bit[s - 1] == 1 }
+    if on_count % 2 != p_arr[i]
+      all_on = false
+      break
     end
-    lit_cnt += 1 if on_cnt % 2 == plist[i]
   end
-  combi_cnt += 1 if lit_cnt == m
+
+  count += 1 if all_on
 end
 
-puts combi_cnt
+# 結果を出力
+puts count
