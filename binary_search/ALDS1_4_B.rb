@@ -1,24 +1,31 @@
 # ref: https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_4_B&lang=ja#
 
-n = gets.chomp.to_i
-a = gets.chomp.split.map(&:to_i)
-_ = gets.chomp
-m = gets.chomp.split.map(&:to_i)
+# 差集合じゃだめかな
 
-results = []
-sums = []
+_ = gets.chomp.to_i
+sl = gets.chomp.split.map(&:to_i)
+_ = gets.chomp.to_i
+tl = gets.chomp.split.map(&:to_i)
+cnt = 0
 
-(1<<n).times do |i|
-  sum = 0
 
-  n.times do |bit|
-    sum += a[bit] if i & (1 << bit) != 0
+
+tl.each do |t|
+  left = 0
+  right = sl.size - 1
+
+  while left <= right do
+    idx = left + (right - left) / 2
+
+    if sl[idx] > t
+      right = idx - 1
+    elsif sl[idx] < t
+      left = idx + 1
+    else
+      cnt += 1
+      break
+    end
   end
-  sums.push(sum)
 end
 
-m.each do |mi|
-  results.push(sums.include?(mi) ? 'yes' : 'no')
-end
-
-puts results
+puts cnt
