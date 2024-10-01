@@ -1,18 +1,12 @@
-# frozen_string_literal: true
 # ref: https://atcoder.jp/contests/abc150/tasks/abc150_c
 
 n = gets.chomp.to_i
+p_arr = gets.chomp.split.map(&:to_i)
+q_arr = gets.chomp.split.map(&:to_i)
 
-p = gets.split.map(&:to_i)
-q = gets.split.map(&:to_i)
+all = (1..n).to_a.permutation(n)
 
-pi = nil
-qi = nil
+p_index = all.find_index(p_arr)
+q_index = all.find_index(q_arr)
 
-(1..n).to_a.permutation.to_a.each_with_index do |bits, i|
-  pi = i if bits == p
-  qi = i if bits == q
-  break if !pi.nil? && !qi.nil?
-end
-
-p (pi - qi).abs
+p (p_index - q_index).abs
