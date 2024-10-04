@@ -1,31 +1,32 @@
-
 # ref: https://atcoder.jp/contests/abc138/tasks/abc138_d
 
-def dfs(graph, v, pv)
+n, q = gets.chomp.split.map(&:to_i)
+
+@counters = Array.new(n, 0)
+graph = Array.new(n) { [] }
+
+def dfs(graph, v, pv = -1)
+  # 初回は前準備で加算しているので何もしない
   @counters[v] += @counters[pv] unless pv == -1
 
-  graph[v].each do |e|
-    next if e == pv # 逆、すなわち親ノードに進めないようにする
-
-    dfs(graph, e, v)
+  graph[v].each do |nv|
+    # 親ノードには戻らない
+    next if pv == nv
+    dfs(graph, nv, v)
   end
 end
-n, q = gets.chomp.split.map(&:to_i)
-graph = Array.new(n) { [] }
-(n - 1).times do
+
+(n-1).times do
   a, b = gets.chomp.split.map(&:to_i)
   graph[a - 1] << b - 1
   graph[b - 1] << a - 1
 end
 
-@counters = Array.new(n, 0)
-q.times do
+q.times do |i|
   v, x = gets.chomp.split.map(&:to_i)
-  v -= 1
-  #  前準備。まず親ノードにのみ変更内容を記録する
-  @counters[v] += x
+  # 前準備 親ノードに対しすべてのクエリを実行する
+  @counters[v - 1] += x
 end
-
-# 最後に数え上げる
 dfs(graph, 0, -1)
+
 puts @counters.join(' ')
