@@ -1,12 +1,11 @@
-# frozen_string_literal: true
+
 # ref: https://atcoder.jp/contests/abc138/tasks/abc138_d
 
 def dfs(graph, v, pv)
-binding.irb
   @counters[v] += @counters[pv] unless pv == -1
 
   graph[v].each do |e|
-    next if e == pv
+    next if e == pv # 逆、すなわち親ノードに進めないようにする
 
     dfs(graph, e, v)
   end
@@ -23,8 +22,10 @@ end
 q.times do
   v, x = gets.chomp.split.map(&:to_i)
   v -= 1
+  #  前準備。まず親ノードにのみ変更内容を記録する
   @counters[v] += x
 end
 
+# 最後に数え上げる
 dfs(graph, 0, -1)
 puts @counters.join(' ')
