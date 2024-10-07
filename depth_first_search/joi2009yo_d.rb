@@ -1,43 +1,41 @@
-# frozen_string_literal: true
-
 # ref: https://atcoder.jp/contests/joi2009yo/tasks/joi2009yo_d
 
-@dx = [0, 0, 1, -1]
-@dy = [1, -1, 0, 0]
-@ans = 0
+@m = gets.chomp.to_i # 横
+@n = gets.chomp.to_i # 縦
 
-def dfs(xx, yy, count, visited)
-  count += 1
-  @ans = count if @ans < count
+@dx = [1, 0, -1, 0]
+@dy = [0, 1, 0, -1]
 
-  visited[yy][xx] = true
+@field = Array.new(@n, [])
 
+@n.times do |i|
+  @field[i] = gets.chomp.split.map(&:to_i)
+end
+
+def dfs(x, y, field, depth = 0)
   4.times do |i|
-    nxx = xx + @dx[i]
-    nyy = yy + @dy[i]
+    nx = x + @dx[i]
+    ny = y + @dy[i]
+    next if nx < 0 || nx >= @m || ny < 0 || ny >= @n
+    next if field[ny][nx] == 0
 
-    next if nxx.negative? || nyy.negative? || nxx > @x - 1 || nyy > @y - 1
-    next if @fields[nyy][nxx].zero?
-    next if visited[nyy][nxx]
+    # seen の代わり
+    # 移動する直前じゃないとダメ。一番最初にやってしまうと戻せないケースがあるから
+    # 4.times の直後に 0 にすると例えば field[y][x] = 0 のケースで戻せなくなってしまう
+    field[y][x] = 0
+    dfs(nx, ny, field, depth + 1)
+    field[y][x] = 1
+  end
+  @max = [@max, depth + 1].max
+end
 
-    dfs(nxx, nyy, count, visited)
+@max = 0
+
+@n.times do |i|
+  @m.times do |j|
+    next if @field[i][j] == 0
+    dfs(j, i, @field, 0)
   end
 end
 
-@x = gets.chomp.to_i
-@y = gets.chomp.to_i
-
-@fields = Array.new(@y) { Array.new(@x, 0) }
-
-@y.times do |i|
-  @fields[i] = gets.chomp.split.map(&:to_i)
-end
-
-@x.times do |xx|
-  @y.times do |yy|
-    visited = Array.new(@y) { Array.new(@x, false) }
-    dfs(xx, yy, 0, visited)
-  end
-end
-
-puts @ans
+p @max
