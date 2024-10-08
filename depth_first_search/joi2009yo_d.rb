@@ -23,6 +23,8 @@ def dfs(x, y, field, depth = 0)
     # 移動する直前じゃないとダメ。一番最初にやってしまうと戻せないケースがあるから
     # 4.times の直後に 0 にすると例えば field[y][x] = 0 のケースで戻せなくなってしまう
     field[y][x] = 0
+
+    # count ではなく depth を渡さないと、適切な場所でカウンター更新ができない
     dfs(nx, ny, field, depth + 1)
     field[y][x] = 1
   end
