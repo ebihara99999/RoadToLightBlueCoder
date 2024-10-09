@@ -1,47 +1,38 @@
-# frozen_string_literal: true
+# https://atcoder.jp/contests/abc007/tasks/abc007_3
+# 1825
+# 1902
 
-#22:05 43
+dx = [1, 0, -1, 0]
+dy = [0, 1, 0, -1]
 
 r, c = gets.chomp.split.map(&:to_i)
-sy, sx = gets.chomp.split.map(&:to_i)
-gy, gx = gets.chomp.split.map(&:to_i)
+sy, sx = gets.chomp.split.map { |i| i.to_i - 1 }
+gy, gx = gets.chomp.split.map { |i| i.to_i - 1 }
 
-sy -= 1
-sx -= 1
-gy -= 1
-gx -= 1
-
-graph = Array.new(r) { Array.new(c) }
-
+fields = Array.new(r) { Array.new(c) }
 r.times do |i|
-  graph[i] = gets.chomp.split('')
+  fields[i] = gets.chomp.split('')
 end
 
-dx = [0, 0, 1, -1]
-dy = [1, -1, 0, 0]
-
-queue = []
-
-queue << [sx, sy]
 dist = Array.new(r) { Array.new(c, -1) }
+queue = Array.new
 
 dist[sy][sx] = 0
+queue.push([sy, sx])
 
 while !queue.empty?
-  x, y = queue.shift
-  binding.irb if x.nil? || y.nil?
+  vy, vx = queue.shift
 
   4.times do |i|
-    nx = x + dx[i]
-    ny = y + dy[i]
-
-    next if graph[ny][nx] == '#'
+    ny = vy + dy[i]
+    nx = vx + dx[i]
+    next if ny.negative? || nx.negative? || ny >= r || nx >= c
     next if dist[ny][nx] != -1
-
-    dist[ny][nx] = dist[y][x] + 1
+    next if fields[ny][nx] == '#'
     break if dist[gy][gx] != -1
 
-    queue << [nx, ny]
+    dist[ny][nx] = dist[vy][vx] + 1
+    queue.push [ny, nx]
   end
 end
 
