@@ -1,40 +1,37 @@
 # ref: https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1160&lang=jp
-# 12:34
 
-@dw = [1, 1, 1, 0, 0, -1, -1, -1]
-@dh = [1, 0, -1, 1, -1, 1, 0, -1]
-
-@counts = []
+@dx = [1, 1, 1, 0, 0, -1, -1, -1]
+@dy = [1, 0, -1, 1, -1, 1, 0, -1]
 
 def dfs(h, w)
+  @fields[h][w] = 0
   8.times do |i|
-    nh = h + @dh[i]
-    nw = w + @dw[i]
+    nh = h + @dy[i]
+    nw = w + @dx[i]
 
-    next if nw.negative? || nh.negative? || nh >= @h || nw >= @w
-    next if @field[nh][nw].zero?
-    @field[nh][nw] = 0
+    next if nh.negative? || nw.negative? || nh >= @h || nw >= @w
+    next if @fields[nh][nw].zero?
+
     dfs(nh, nw)
   end
 end
 
-while (@w, @h = gets.chomp.split.map(&:to_i)) != [0, 0] do
-  @count = 0
-
-  @field = []
+counters = []
+while (@w, @h = gets.chomp.split.map(&:to_i)) != [0, 0]
+  @fields = Array.new(@h) { Array.new(@w) }
   @h.times do |i|
-    @field[i] = gets.chomp.split.map(&:to_i)
+    @fields[i] = gets.chomp.split.map(&:to_i)
   end
 
-  @w.times do |wi|
-    @h.times do |hi|
-      next if @field[hi][wi].zero?
+  count = 0
+  @h.times do |hi|
+    @w.times do |wi|
+      next if @fields[hi][wi].zero?
       dfs(hi, wi)
-      @count += 1
+      count += 1
     end
   end
-
-  @counts << @count
+  counters << count
 end
 
-puts @counts
+puts counters.join("\n")
