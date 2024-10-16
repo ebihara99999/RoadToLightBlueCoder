@@ -1,25 +1,27 @@
 # frozen_string_literal: true
+
 # ref: https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_C&lang=ja
 
-n, w = gets.chomp.split.map(&:to_i)
-weights = Array.new(n)
-values = Array.new(n)
 
-n.times do |i|
+@n, @w = gets.chomp.split.map(&:to_i)
+values = Array.new(@n)
+weights = Array.new(@n)
+
+@n.times do |i|
   values[i], weights[i] = gets.chomp.split.map(&:to_i)
 end
 
-# This satisfies the initial condition.
-dp = Array.new(n + 1) { Array.new(w + 1, 0) }
+dp = Array.new(@w + 1, 0)
+dp[0] = 0
 
-n.times do |i|
-  (0..w).each do |j|
-    dp[i + 1][j] = if j >= weights[i]
-                     [(dp[i][j - weights[i]] + values[i]), (dp[i + 1][j - weights[i]] + values[i]), dp[i][j]].max
-                   else
-                     dp[i][j]
-                   end
+(@w + 1).times do |w|
+  @n.times do |i|
+    dp[w] = if w >= weights[i]
+              [dp[w - weights[i]] + values[i], dp[w]].max
+            else
+              dp[w]
+            end
   end
 end
 
-puts dp[n][w]
+puts dp[@w]
