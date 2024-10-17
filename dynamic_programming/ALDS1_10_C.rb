@@ -2,25 +2,23 @@
 
 # ref: https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_10_C&lang=ja
 
-n, w = gets.chomp.split.map(&:to_i)
+n = gets.chomp.to_i
+n.times do
+  s = gets.chomp
+  t = gets.chomp
 
-values = Array.new(n, 0)
-weights = Array.new(n, 0)
+  dp = Array.new(s.size + 1) { Array.new(t.size + 1, 0) }
 
-n.times do |i|
-  values[i], weights[i] = gets.chomp.split.map(&:to_i)
-end
-
-dp = Array.new(w + 1, 0)
-
-(0..w).each do |w|
-  n.times do |i|
-    dp[w] = if weights[i] <= w
-              [dp[w], dp[w - weights[i]] + values[i]].max
-            else
-              dp[w]
-            end
+  s.size.times do |i|
+    t.size.times do |j|
+      if s[i] == t[j]
+        dp[i + 1][j + 1] = [dp[i][j] + 1, dp[i + 1][j + 1]].max
+      else
+        dp[i + 1][j + 1] = [dp[i + 1][j + 1], dp[i + 1][j]].max
+        dp[i + 1][j + 1] = [dp[i + 1][j + 1], dp[i][j + 1]].max
+      end
+    end
   end
-end
 
-puts dp[w]
+  puts dp[s.size][t.size]
+end
