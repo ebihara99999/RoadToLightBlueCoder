@@ -2,17 +2,18 @@ _, M = gets.chomp.split.map(&:to_i)
 A = gets.chomp.split.map(&:to_i)
 B = gets.chomp.split.map(&:to_i)
 
-min = A.min
+K = 200_010
+
+id = Array.new(K, -1)
+r = K
+
+A.each_with_index do |a, i|
+  while r > a
+    r -= 1
+    id[r] = i + 1
+  end
+end
+
 B.each do |b|
-  if b < min
-    puts -1
-    next
-  end
-#
-  ans = A.find_index { |a| a <= b }
-  if ans.nil?
-    puts -1
-  else
-    puts ans + 1
-  end
+  puts id[b]
 end
